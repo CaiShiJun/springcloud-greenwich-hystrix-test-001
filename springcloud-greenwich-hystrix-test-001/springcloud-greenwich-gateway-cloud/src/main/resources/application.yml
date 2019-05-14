@@ -1,0 +1,41 @@
+server:
+  port: 8104
+
+spring:
+  application:
+    name: gateway-server
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          lowerCaseServiceId: true
+      routes:
+      - id: SERVICE-PRODUCER
+        uri: lb://SERVICE-PRODUCER
+        predicates:
+          - Path=/provider/**
+        filters:
+          - StripPrefix=1
+          - RequestTime=true
+      - id: SERVICE-CONSUMER
+        uri: lb://SERVICE-CONSUMER
+        predicates:
+          - Path=/consumer/**
+        filters:
+          - StripPrefix=1
+          - RequestTime=true
+      - id: SERVICE_FALLBACK
+        uri: lb://SERVICE_FALLBACK
+        predicates:
+        - Path=/fallback/**
+        filters:
+        - name: Hystrix
+          args:
+            name: fallbackcmd
+            fallbackUri: forward:/fallback
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+

@@ -1,0 +1,41 @@
+server:
+  port: 8105
+
+spring:
+  application:
+    name: zuul-server
+
+eureka:
+  client:
+    service-url:
+      #设置与Eureka Server交互的地址，查询服务和注册服务都需要依赖这个地址。默认是http://localhost:8761/eureka ；多个地址可使用 , 分隔。
+      defaultZone: http://localhost:8761/eureka/
+
+zuul:
+  routes:
+    service-consumer:
+      path: /consumer/**
+      serviceId: service-consumer
+    service-producer:
+      path: /producer/**
+      serviceId: service-producer
+    service-fallback:
+      path: /fallback/**
+      serviceId: service-fallback
+  host:
+    connect-timeout-millis: 15000 #HTTP连接超时要比Hystrix的大
+    socket-timeout-millis: 60000   #socket超时
+
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+  http:
+    client:
+      enabled: false
+  okhttp:
+    enabled: true
+
+
+hystrix:
+  metrics:
+    polling-interval-ms: 10000
