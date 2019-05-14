@@ -58,5 +58,19 @@ public class SpringCloudFeignJunitTest {
             Thread.sleep(SLEEP_TIME);
         }
     }
+
+    /**
+     * 4、restTemplate 的 Hystrix
+     */
+    @Test
+    public void restTemplateFallback() throws Exception {
+        PORT = 8080;
+
+        for (int i = 0; i < FOR_TIMES; i++) {
+            String result = HttpClientUtils.sendGetRequest(getUrl("/restTemplateFallback/XXXXXX-NAME-XXXXX", HOST, PORT));
+            System.out.println("result ： " + result);
+            Thread.sleep(SLEEP_TIME);
+        }
+    }
 }
 
